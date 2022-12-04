@@ -14,6 +14,7 @@ import (
 	"code.rocketnine.space/tslocum/messeji"
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"golang.design/x/clipboard"
 )
 
@@ -171,6 +172,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	g.inpFld.Draw(screen)
+
+	footerX := g.w/2 - 80
+	footerY := g.h/2 + g.pokemon.Image.Bounds().Dy()/2 + 140
+	ebitenutil.DebugPrintAt(screen, "Made by DiabeticOwl", footerX, footerY)
 }
 
 func (g *Game) setUpInputField() {

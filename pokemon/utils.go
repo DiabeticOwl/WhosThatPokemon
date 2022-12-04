@@ -2,7 +2,6 @@ package pokemon
 
 import (
 	"encoding/json"
-	"fmt"
 	"image"
 	"math/rand"
 	"net/http"
@@ -79,8 +78,6 @@ func prepSelectedPkm(spc *Species) *Pokemon {
 		url := randPkm.ImageUrl
 		randPkm.Image, randPkm.SilImage = decodeImageFromWeb(url)
 	}
-
-	fmt.Println(randPkm.Name)
 
 	return randPkm
 }
