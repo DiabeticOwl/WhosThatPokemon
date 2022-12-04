@@ -1,6 +1,7 @@
 package object
 
 import (
+	"fmt"
 	"time"
 	objRes "whosthatpokemon/object/resources"
 	"whosthatpokemon/resources/images/objectImages"
@@ -26,7 +27,7 @@ const (
 var (
 	SBtnClicked           *bool
 	GameHeight, GameWidth int
-	GameScore             *string
+	GameScore             string
 	SelectedGenerations   = make(map[int]struct{})
 	SelectedTypes         = make(map[int]struct{})
 	standardFnt           *PkmFont
@@ -37,6 +38,7 @@ var (
 )
 
 func init() {
+	GameScore = fmt.Sprintf("%03d", 0)
 	SBtnClicked = new(bool)
 
 	opt := &truetype.Options{Size: TxtStandardFontSize}

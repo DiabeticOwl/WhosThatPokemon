@@ -14,7 +14,6 @@ import (
 	"code.rocketnine.space/tslocum/messeji"
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"golang.design/x/clipboard"
 )
 
@@ -23,18 +22,36 @@ const (
 	gameHeight int = 800
 )
 
+// Game is the main instance of ebiten.Game to be executed.
 type Game struct {
-	w, h    *int
-	tick    *int
+	// Describes the width and height of the game.
+	w int
+
+	// Describes the height of the game.
+	h int
+
+	// Describes the internal time in which the game is currently at.
+	// For more information please read the Update method: https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Game
+	tick *int
+
+	// Points to the currently shown Pokemon value.
 	pokemon *pokemon.Pokemon
 
+	// Slice of object.Object type that stores first-party assets to draw and
+	// update in the game.
 	objects []object.Object
 
-	inpFld          *messeji.InputField
-	inputtedPokemon *string
-	score           *string
+	// Points to the instance of messeji.InputField that is available to the
+	// user.
+	inpFld *messeji.InputField
+
+	// Stores the user's inputted text through the messeji.InputField.
+	inputtedPokemon string
 }
 
+// Update proceeds the game state by executing the "Update" method in each
+// object within the game itself.
+// Update is called every tick (1/60 [s] by default).
 func (g *Game) Update() error {
 	*g.tick++
 
@@ -42,6 +59,7 @@ func (g *Game) Update() error {
 		obj.Update()
 	}
 
+	// Enables the user to type inside the InputField.
 	g.inpFld.SetSingleLine(true)
 	if err := g.inpFld.Update(); err != nil {
 		panic(err)
@@ -50,14 +68,20 @@ func (g *Game) Update() error {
 		g.inpFld.SetText("")
 	}
 
-	if ebiten.IsKeyPressed(ebiten.KeyControl) && ebiten.IsKeyPressed(ebiten.KeyV) {
+	if ebiten.IsKeyPressed(ebiten.KeyControl) &&
+		ebiten.IsKeyPressed(ebiten.KeyV) {
 		g.inpFld.SetText(string(clipboard.Read(clipboard.FmtText)))
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
-		cleanInput := strings.ToLower(*g.inputtedPokemon)
+	if ebiten.IsKeyPressed(ebiten.KeyEnter) ||
+		ebiten.IsKeyPressed(ebiten.KeyNumpadEnter) {
+		// Inputted text will be parsed accordingly in order to be properly used.
+		cleanInput := strings.ToLower(g.inputtedPokemon)
 
+		// Usage of mapsets in order to harness their Contains method.
+		// https://pkg.go.dev/github.com/deckarep/golang-set/v2#Set
 		pkmNames := mapset.NewSet[string]()
 		cleanPkmNames := mapset.NewSet[string]()
+		// Recollection of pokemon name's variants.
 		for _, name := range g.pokemon.OtherNames {
 			pkmNames.Add(strings.ToLower(name.Name))
 
@@ -68,16 +92,19 @@ func (g *Game) Update() error {
 		if pkmNames.Contains(cleanInput) || cleanPkmNames.Contains(cleanInput) {
 			pokemon.Guessed = true
 
-			actualSc, _ := strconv.Atoi(*g.score)
+			actualSc, _ := strconv.Atoi(object.GameScore)
 			actualSc += 1
 
-			*object.GameScore = fmt.Sprintf("%03d", actualSc)
+			object.GameScore = fmt.Sprintf("%03d", actualSc)
 
 			g.inpFld.SetText("")
 		} else {
 			pokemon.Guessed = false
 		}
 	}
+	// Each 4 seconds, if the pokemon is guessed or the user surrenders by
+	// clicking the corresponding button, another pokemon given the selected
+	// filters will be chosen.
 	if *g.tick%240 == 0 && (pokemon.Guessed || *object.SBtnClicked) {
 		pokemon.Guessed = false
 		*object.SBtnClicked = false
@@ -108,10 +135,13 @@ func (g *Game) Update() error {
 	return nil
 }
 
+// Layout takes the outside size (e.g., the window size) and returns the
+// (logical) screen size. It runs every time the outside size changes, updating
+// the InputField accordingly.
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	object.GameWidth, object.GameHeight = outsideWidth, outsideHeight
 
-	if outsideWidth == *g.w && outsideHeight == *g.h {
+	if outsideWidth == g.w && outsideHeight == g.h {
 		return outsideWidth, outsideHeight
 	}
 
@@ -121,11 +151,13 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 
 	g.inpFld.SetRect(image.Rect(inpX, inpY, inpX+475, inpY+50))
 
-	*g.w, *g.h = outsideWidth, outsideHeight
+	g.w, g.h = outsideWidth, outsideHeight
 
 	return outsideWidth, outsideHeight
 }
 
+// Draw executes the "Draw" method in each object within the game.
+// Draw is called every frame (typically 1/60[s] for 60Hz display).
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{235, 235, 235, 1})
 
@@ -143,7 +175,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 func (g *Game) setUpInputField() {
 	g.inpFld.SetSelectedFunc(func() (accept bool) {
-		*g.inputtedPokemon = g.inpFld.Text()
+		g.inputtedPokemon = g.inpFld.Text()
 
 		return true
 	})
@@ -153,20 +185,13 @@ func main() {
 	rand.Seed(time.Now().UnixMilli())
 
 	game := &Game{
-		w:               new(int),
-		h:               new(int),
-		tick:            new(int),
-		pokemon:         pokemon.GetRandomPokemon(map[string][]string{}),
-		inputtedPokemon: new(string),
-		score:           new(string),
+		tick:    new(int),
+		pokemon: pokemon.GetRandomPokemon(map[string][]string{}),
 		objects: []object.Object{
 			object.NewSurrenderBtn(),
 			object.NewScore(),
 		},
 	}
-
-	*game.score = fmt.Sprintf("%03d", 0)
-	object.GameScore = game.score
 
 	game.objects = append(game.objects, object.InitializeGenerationBtns()...)
 	game.objects = append(game.objects, object.InitializeTypeBtns()...)

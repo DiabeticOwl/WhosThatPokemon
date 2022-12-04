@@ -17,7 +17,7 @@ func NewScore() Object {
 func (sc *score) Update() {}
 
 func (sc *score) Draw(screen *ebiten.Image) {
-	score := fmt.Sprintf("Score: %s", *GameScore)
+	score := fmt.Sprintf("Score: %s", GameScore)
 
 	// The standard pokemon size is 475x475.
 	pkmX := float64(GameWidth)/2 + 475./2
