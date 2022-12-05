@@ -6,6 +6,4 @@ pokemon from the famous world of [Pokémon](https://en.wikipedia.org/wiki/Pok%C3
 These pokemon can be filtered by [generation](https://bulbapedia.bulbagarden.net/wiki/Generation)
 or [type](https://bulbapedia.bulbagarden.net/wiki/Type).
 
-The web version of this game can be found [here](https://github.com/DiabeticOwl/WhosThatPokemon-Web).
-
 ![appPreview](https://github.com/DiabeticOwl/WhosThatPokemon/blob/main/resources/readme/preview.gif)
