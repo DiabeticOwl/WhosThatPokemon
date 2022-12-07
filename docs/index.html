@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <script src="/assets/wasm_exec.js"></script>
 <script>
 // Polyfill
@@ -13,9 +13,4 @@ const go = new Go();
 WebAssembly.instantiateStreaming(fetch("/assets/whosthatpokemon.wasm"), go.importObject).then(result => {
     go.run(result.instance);
 });
-</script> -->
-<html>
-    <body>
-        <h1>Hola mundo</h1>
-    </body>
-</html>
+</script>
