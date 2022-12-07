@@ -15,6 +15,7 @@ import (
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"golang.design/x/clipboard"
 )
 
@@ -73,8 +74,11 @@ func (g *Game) Update() error {
 		ebiten.IsKeyPressed(ebiten.KeyV) {
 		g.inpFld.SetText(string(clipboard.Read(clipboard.FmtText)))
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyEnter) ||
-		ebiten.IsKeyPressed(ebiten.KeyNumpadEnter) {
+	// Since ebiten.IsKeyPressed can be registered as long as the key is pressed
+	// inpututil.IsKeyJustPressed is required so the pressing of one of these
+	// keys will be registered once.
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) ||
+		inpututil.IsKeyJustPressed(ebiten.KeyNumpadEnter) {
 		// Inputted text will be parsed accordingly in order to be properly used.
 		cleanInput := strings.ToLower(g.inputtedPokemon)
 
@@ -103,6 +107,8 @@ func (g *Game) Update() error {
 			pokemon.Guessed = false
 		}
 	}
+	// TODO: Make it so it passes *after* a few seconds of guessing it or
+	// clicking the surrender button.
 	// Each 4 seconds, if the pokemon is guessed or the user surrenders by
 	// clicking the corresponding button, another pokemon given the selected
 	// filters will be chosen.
