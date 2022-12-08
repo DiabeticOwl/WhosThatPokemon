@@ -19,6 +19,13 @@
         }();
         // If the script isn't being run on mobile, launch game.
         if (!isMobile) {
+            const h1Notification = document.getElementById("mobileCheck");
+            const h1NotificationText = document.createTextNode(
+                "Loading..."
+            );
+    
+            h1Notification.appendChild(h1NotificationText);
+            
             // Polyfill
             if (!WebAssembly.instantiateStreaming) {
                 WebAssembly.instantiateStreaming = async (resp, importObject) => {
