@@ -38,6 +38,8 @@
             WebAssembly.instantiateStreaming(fetch("whosthatpokemon.wasm"), go.importObject).then(result => {
                 go.run(result.instance);
             });
+
+            h1Notification.textContent = '';
         } else {
             const h1Notification = document.getElementById("mobileCheck");
             const h1NotificationText = document.createTextNode(
