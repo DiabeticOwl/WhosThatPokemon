@@ -49,7 +49,9 @@
       document.addEventListener('readystatechange', e => {
         // If page state is not completely loaded and isn't run on a mobile,
         // show loader.
-        if (document.readyState === "complete") {
+        if (document.readyState !== "complete") {
+          document.getElementById("loader").style.display = "block";
+        } else {
           document.getElementById("loader").style.display = "none";
 
           // https://stackoverflow.com/a/11381730
@@ -80,8 +82,6 @@
 
             h1Notification.appendChild(h1NotificationText);
           }
-        } else {
-          document.getElementById("loader").style.display = "block";
         }
       });          
     </script>
