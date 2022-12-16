@@ -66,7 +66,7 @@
         h1Notification.appendChild(h1NotificationText);
       } else {
         document.addEventListener("readystatechange", (event) => {
-          if (event.target.readyState === "interactive" || event.target.readyState === "loading") {
+          if (event.target.readyState === "loading") {
             document.getElementById("loader").style.display = "block";
        
             // Polyfill
@@ -83,7 +83,7 @@
             });
 
             event.target.readyState = "complete";
-          } else if (event.target.readyState === "complete") {
+          } else if (event.target.readyState === "interactive" || event.target.readyState === "complete") {
             document.getElementById("loader").style.display = "none";
           }
         });
