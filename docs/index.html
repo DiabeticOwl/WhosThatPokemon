@@ -65,7 +65,7 @@
 
         h1Notification.appendChild(h1NotificationText);
       } else {
-          if (document.readyState !== "complete") {
+          if (document.readyState === "loading") {
             document.getElementById("loader").style.display = "block";
        
             // Polyfill
