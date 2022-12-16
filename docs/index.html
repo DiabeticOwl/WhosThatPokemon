@@ -46,10 +46,10 @@
     </div>
     <script src="wasm_exec.js"></script>
     <script>
-      document.addEventListener('readystatechange', e => {
+      document.addEventListener('readystatechange', (event) => {
         // If page state is not completely loaded and isn't run on a mobile,
         // show loader.
-        if (document.readyState !== "complete") {
+        if (event.target.readyState !== "complete") {
           document.getElementById("loader").style.display = "block";
         } else {
           document.getElementById("loader").style.display = "none";
