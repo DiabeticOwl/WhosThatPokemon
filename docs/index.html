@@ -65,9 +65,8 @@
 
         h1Notification.appendChild(h1NotificationText);
       } else {
-          // console.log(document.readyState);
-          
-          if (document.readyState !== "complete") {
+        document.addEventListener("readystatechange", (event) => {
+          if (event.target.readyState === "interactive" || event.target.readyState === "loading") {
             document.getElementById("loader").style.display = "block";
        
             // Polyfill
@@ -83,11 +82,33 @@
               go.run(result.instance);
             });
 
-            document.readyState = "complete";
-          }      
-        else {
-          document.getElementById("loader").style.display = "none";
-        }
+            event.target.readyState = "complete";
+          } else if (event.target.readyState === "complete") {
+            document.getElementById("loader").style.display = "none";
+          }
+        });
+          
+        //   if (document.readyState !== "complete") {
+        //     document.getElementById("loader").style.display = "block";
+       
+        //     // Polyfill
+        //     if (!WebAssembly.instantiateStreaming) {
+        //       WebAssembly.instantiateStreaming = async (resp, importObject) => {
+        //         const source = await (await resp).arrayBuffer();
+        //         return await WebAssembly.instantiate(source, importObject);
+        //       };
+        //     }
+
+        //     const go = new Go();
+        //     WebAssembly.instantiateStreaming(fetch("whosthatpokemon.wasm"), go.importObject).then((result) => {
+        //       go.run(result.instance);
+        //     });
+
+        //     document.readyState = "complete";
+        //   }      
+        // else {
+        //   document.getElementById("loader").style.display = "none";
+        // }
       }
     </script>
   </body>
