@@ -51,11 +51,10 @@
 
         // If page state is not completely loaded and isn't run on a mobile,
         // show loader.
-        if (document.readyState !== "complete") {
-          return divLoader.style.display = "block";
+        if (document.readyState === "complete") {
+          return divLoader.style.display = "none";
         }
-
-        divLoader.style.display = "none";
+        divLoader.style.display = "block";
 
         // https://stackoverflow.com/a/11381730
         let isMobile = (function () {
