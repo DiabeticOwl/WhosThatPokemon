@@ -65,7 +65,7 @@
 
         h1Notification.appendChild(h1NotificationText);
       } else {
-          console.log(document.readyState);
+          // console.log(document.readyState);
           
           if (document.readyState !== "complete") {
             document.getElementById("loader").style.display = "block";
@@ -84,9 +84,9 @@
             });
 
             document.readyState = "complete";
+            document.getElementById("loader").style.display = "none";
           }      
         else {
-          document.getElementById("loader").style.display = "none";
         }
       }
     </script>
