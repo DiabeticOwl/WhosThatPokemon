@@ -18,7 +18,7 @@
         justify-content: center;
       }
       .loader {
-        display: none;
+        display: block;
         border: 16px solid #f3f3f3;
         border-radius: 50%;
         border-top: 16px solid #3498db;
@@ -54,8 +54,6 @@
         if (document.readyState === "complete") {
           return divLoader.style.display = "none";
         }
-        divLoader.style.display = "block";
-
         // https://stackoverflow.com/a/11381730
         let isMobile = (function () {
           let check = false;
