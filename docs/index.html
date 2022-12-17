@@ -49,12 +49,6 @@
       document.addEventListener('readystatechange', (e) => {
         const divLoader = document.getElementById("loader");
 
-        // If page state is not completely loaded and isn't run on a mobile,
-        // show loader.
-        if (document.readyState === "complete") {
-          return divLoader.style.display = "none";
-        }
-
         divLoader.style.display = "block";
         // https://stackoverflow.com/a/11381730
         let isMobile = (function () {
@@ -85,7 +79,9 @@
           h1Notification.appendChild(h1NotificationText);
         }
 
-        document.readyState = "complete";
+        if (event.target.readyState === "complete") {
+          return divLoader.style.display = "none";
+        }
       });          
     </script>
   </body>
