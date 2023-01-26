@@ -45,6 +45,7 @@ var (
 		"Sixth Generation",
 		"Seventh Generation",
 		"Eight Generation",
+		"Ninth Generation",
 	}
 )
 
